@@ -21,14 +21,13 @@ function error(error) {
 function getCityTemp(response) {
   // current temperature
 
-  let temp = Math.round(response.data.list[0].main.temp);
-  let location = response.data.city.name;
-  let weatherDescription = response.data.list[0].weather[0].main;
-  let humidity = response.data.list[0].main.humidity;
-  let wind = Math.round(response.data.list[0].wind.speed);
-  let timezoneOffset = response.data.city.timezone;
+  console.log(response);
+  let temp = Math.round(response.data.current.temp);
+  let weatherDescription = response.data.current.weather[0].main;
+  let humidity = response.data.current.humidity;
+  let wind = Math.round(response.data.current.wind_speed);
+  let timezoneOffset = response.data.timezone_offset;
   document.querySelector("#temperatureNow").innerHTML = temp;
-  document.querySelector("#city").innerHTML = location;
   document.querySelector("#weather-description").innerHTML = weatherDescription;
   document.querySelector("#humidity").innerHTML = `${humidity}`;
   document.querySelector("#wind").innerHTML = `${wind} `;
@@ -41,12 +40,13 @@ function getCityTemp(response) {
     let dayOfWeek = document.querySelector("#header-day").innerHTML;
     find = currentDay.find((element) => element === dayOfWeek);
     dayOfWeek = currentDay.indexOf(find);
-    console.log(dayOfWeek);
 
-    for (let i = 1; i < 6; i++) {
+    for (let i = 0; i < 5; i++) {
       let weekday = dayOfWeek + i;
-
+      let highTemp = Math.round(response.data.daily[`${i}`].temp.max);
+      console.log(highTemp);
       document.querySelector(`#day${i}`).innerHTML = currentDay[weekday];
+      document.querySelector(`#highDay${i}`).innerHTML = `${highTemp}°`;
     }
   }
 
@@ -54,12 +54,22 @@ function getCityTemp(response) {
   let tempColumn = document.querySelector(".nowTemp");
   tempColumn.classList.remove("mordor");
 
+  //functions called
+
   getLocalTime(timezoneOffset);
   getForecastDate();
 }
 
 function getEndpoint(cityEntered) {
   let city = cityEntered;
+  let endpoint = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
+  axios.get(endpoint).then(getLonLat).catch(error);
+}
+
+function getLonLat(response) {
+  let location = response.data.city.name;
+  let lat = response.data.city.coord.lat;
+  let lon = response.data.city.coord.lon;
   let units = "metric";
   let convertTo = document.querySelector("#celsius");
   if (convertTo.classList.contains("selected")) {
@@ -69,9 +79,10 @@ function getEndpoint(cityEntered) {
     units = "imperial";
     document.querySelector("#windUnits").innerHTML = "mph";
   }
-
-  let endpoint = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=${units}`;
-  axios.get(endpoint).then(getCityTemp).catch(error);
+  document.querySelector("#city").innerHTML = location;
+  let endpoint = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude={part}&appid=${apiKey}&units=${units}`;
+  console.log(endpoint);
+  axios.get(endpoint).then(getCityTemp);
 }
 
 // *** SEARCH ENGINE ***
