@@ -187,3 +187,7 @@ a.selected {
   max-width: 600px;
   margin: 0 auto;
 }
+
+#timezone {
+  color: transparent;
+}
