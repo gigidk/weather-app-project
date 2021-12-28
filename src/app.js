@@ -74,6 +74,18 @@ function handleCitySearch(event) {
 let inputForm = document.querySelector("form");
 inputForm.addEventListener("submit", handleCitySearch);
 
+// Preset handle clicks
+
+function handlePresetCity(event) {
+  let selectedCity = event.target.innerHTML;
+  getEndpoint(selectedCity);
+}
+
+for (let i = 1; i < 6; i++) {
+  let presetCity = document.querySelector(`#preset${i}`);
+  presetCity.addEventListener("click", handlePresetCity);
+}
+
 // *** CELSIUS TO FARENHEIT
 
 function convertToFarenheit(event) {
