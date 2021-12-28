@@ -44,9 +44,11 @@ function getCityTemp(response) {
     for (let i = 0; i < 5; i++) {
       let weekday = dayOfWeek + i;
       let highTemp = Math.round(response.data.daily[`${i}`].temp.max);
+      let lowTemp = Math.round(response.data.daily[`${i}`].temp.min);
       console.log(highTemp);
       document.querySelector(`#day${i}`).innerHTML = currentDay[weekday];
       document.querySelector(`#highDay${i}`).innerHTML = `${highTemp}°`;
+      document.querySelector(`#lowDay${i}`).innerHTML = `${lowTemp}°`;
     }
   }
 
