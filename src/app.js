@@ -19,25 +19,43 @@ function error(error) {
 // current temperature
 
 function getCityTemp(response) {
-  console.log(response);
-  let temp = Math.round(response.data.main.temp);
-  let location = response.data.name;
-  let weatherDescription = response.data.weather[0].main;
-  let humidity = response.data.main.humidity;
-  let wind = Math.round(response.data.wind.speed);
-  let timezoneOffset = response.data.timezone;
+  // current temperature
+
+  let temp = Math.round(response.data.list[0].main.temp);
+  let location = response.data.city.name;
+  let weatherDescription = response.data.list[0].weather[0].main;
+  let humidity = response.data.list[0].main.humidity;
+  let wind = Math.round(response.data.list[0].wind.speed);
+  let timezoneOffset = response.data.city.timezone;
   document.querySelector("#temperatureNow").innerHTML = temp;
   document.querySelector("#city").innerHTML = location;
   document.querySelector("#weather-description").innerHTML = weatherDescription;
   document.querySelector("#humidity").innerHTML = `${humidity}`;
   document.querySelector("#wind").innerHTML = `${wind} `;
-  document.querySelector("#timezone").innerHTML = `${timezoneOffset}`;
 
-  getLocalTime(timezoneOffset);
+  // forecast temperature
+
+  // forecast date
+
+  function getForecastDate() {
+    let dayOfWeek = document.querySelector("#header-day").innerHTML;
+    find = currentDay.find((element) => element === dayOfWeek);
+    dayOfWeek = currentDay.indexOf(find);
+    console.log(dayOfWeek);
+
+    for (let i = 1; i < 6; i++) {
+      let weekday = dayOfWeek + i;
+
+      document.querySelector(`#day${i}`).innerHTML = currentDay[weekday];
+    }
+  }
 
   //for error handling
   let tempColumn = document.querySelector(".nowTemp");
   tempColumn.classList.remove("mordor");
+
+  getLocalTime(timezoneOffset);
+  getForecastDate();
 }
 
 function getEndpoint(cityEntered) {
@@ -52,7 +70,7 @@ function getEndpoint(cityEntered) {
     document.querySelector("#windUnits").innerHTML = "mph";
   }
 
-  let endpoint = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${units}`;
+  let endpoint = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=${units}`;
   axios.get(endpoint).then(getCityTemp).catch(error);
 }
 
@@ -124,6 +142,14 @@ let currentDay = [
   "Thursday",
   "Friday",
   "Saturday",
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
 ];
 
 let currentMonth = [
@@ -141,6 +167,8 @@ let currentMonth = [
   "Dec",
 ];
 
+// current date and time
+
 function getLocalTime(timezoneOffset) {
   let now = new Date();
   let currentUnixTimestamp = now.getTime();
@@ -157,8 +185,8 @@ function getLocalTime(timezoneOffset) {
   let month = currentMonth[now.getMonth()];
   let year = now.getFullYear();
 
-  document.querySelector("#header-day").innerHTML = `${day}`;
   document.querySelector(
     "#header-month-date"
   ).innerHTML = `${month} ${date}, ${year} /  ${hour}:${minutes}`;
+  document.querySelector("#header-day").innerHTML = `${day}`;
 }
