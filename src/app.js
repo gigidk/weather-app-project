@@ -123,9 +123,26 @@ function getLonLat(response) {
   }
   document.querySelector("#city").innerHTML = location;
   let endpoint = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude={part}&appid=${apiKey}&units=${units}`;
-  console.log(endpoint);
   axios.get(endpoint).then(getCityTemp);
 }
+
+// Geolocation API call
+
+function getCityName(response) {
+  let location = response.data.name;
+  getEndpoint(location);
+}
+
+function handlePosition(position) {
+  console.log(position);
+  let lon = position.coords.longitude;
+  let lat = position.coords.latitude;
+  let units = "metric";
+  let endpoint = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&exclude={part}&appid=${apiKey}&units=${units}`;
+  axios.get(endpoint).then(getCityName);
+}
+
+navigator.geolocation.getCurrentPosition(handlePosition);
 
 // *** SEARCH ENGINE ***
 
@@ -141,10 +158,6 @@ function handleCitySearch(event) {
   }
 }
 
-// Go button
-let inputForm = document.querySelector("form");
-inputForm.addEventListener("submit", handleCitySearch);
-
 // Preset handle clicks
 
 function handlePresetCity(event) {
@@ -156,6 +169,18 @@ for (let i = 1; i < 6; i++) {
   let presetCity = document.querySelector(`#preset${i}`);
   presetCity.addEventListener("click", handlePresetCity);
 }
+
+// Go button
+let inputForm = document.querySelector("form");
+inputForm.addEventListener("submit", handleCitySearch);
+
+// Current button
+
+function getGeoTemp(event) {
+  navigator.geolocation.getCurrentPosition(handlePosition);
+}
+
+document.querySelector("#current-city").addEventListener("click", getGeoTemp);
 
 // *** CELSIUS TO FARENHEIT
 

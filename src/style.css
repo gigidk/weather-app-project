@@ -183,6 +183,10 @@ a.selected {
   color: #509dd4;
 }
 
+.dailyLow {
+  color: #85a0d3;
+}
+
 #footer {
   max-width: 600px;
   margin: 0 auto;
