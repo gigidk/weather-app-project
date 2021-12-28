@@ -32,11 +32,26 @@ function getCityTemp(response) {
   document.querySelector("#humidity").innerHTML = `${humidity}`;
   document.querySelector("#wind").innerHTML = `${wind} `;
 
-  // forecast temperature
+  // current temp emoji
 
-  // forecast date
+  if (weatherDescription.includes("Clouds")) {
+    document.querySelector("#current-emoji").innerHTML = "☁️";
+  } else if (weatherDescription.includes("Clear")) {
+    document.querySelector("#current-emoji").innerHTML = "🌞";
+  } else if (weatherDescription.includes("Snow")) {
+    document.querySelector("#current-emoji").innerHTML = "❄️";
+  } else if (
+    weatherDescription.includes("Rain") ||
+    weatherDescription.includes("Drizzle")
+  ) {
+    document.querySelector("#current-emoji").innerHTML = "🌧️";
+  } else {
+    document.querySelector("#current-emoji").innerHTML = "🌩️";
+  }
 
-  function getForecastDate() {
+  // forecast
+
+  function getForecast() {
     let dayOfWeek = document.querySelector("#header-day").innerHTML;
     find = currentDay.find((element) => element === dayOfWeek);
     dayOfWeek = currentDay.indexOf(find);
@@ -45,10 +60,35 @@ function getCityTemp(response) {
       let weekday = dayOfWeek + i;
       let highTemp = Math.round(response.data.daily[`${i}`].temp.max);
       let lowTemp = Math.round(response.data.daily[`${i}`].temp.min);
-      console.log(highTemp);
+      let weatherDescription = response.data.daily[`${i}`].weather[0].main;
       document.querySelector(`#day${i}`).innerHTML = currentDay[weekday];
       document.querySelector(`#highDay${i}`).innerHTML = `${highTemp}°`;
       document.querySelector(`#lowDay${i}`).innerHTML = `${lowTemp}°`;
+
+      if (weatherDescription.includes("Clouds")) {
+        document.querySelector(
+          `#day${i}-emoji`
+        ).innerHTML = `<i class="fas fa-cloud"></i>`;
+      } else if (weatherDescription.includes("Clear")) {
+        document.querySelector(
+          `#day${i}-emoji`
+        ).innerHTML = `<i class="fas fa-sun"></i>`;
+      } else if (weatherDescription.includes("Snow")) {
+        document.querySelector(
+          `#day${i}-emoji`
+        ).innerHTML = `<i class="fas fa-snowflake"></i>`;
+      } else if (
+        weatherDescription.includes("Rain") ||
+        weatherDescription.includes("Drizzle")
+      ) {
+        document.querySelector(
+          `#day${i}-emoji`
+        ).innerHTML = `<i class="fas fa-cloud-rain"></i>`;
+      } else {
+        document.querySelector(
+          `#day${i}-emoji`
+        ).innerHTML = `<i class="fas fa-cloud-rain"></i>`;
+      }
     }
   }
 
@@ -56,10 +96,10 @@ function getCityTemp(response) {
   let tempColumn = document.querySelector(".nowTemp");
   tempColumn.classList.remove("mordor");
 
-  //functions called
+  //functions call
 
   getLocalTime(timezoneOffset);
-  getForecastDate();
+  getForecast();
 }
 
 function getEndpoint(cityEntered) {
