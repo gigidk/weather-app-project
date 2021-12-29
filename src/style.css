@@ -5,6 +5,7 @@ body {
 
 .box {
   max-width: 600px;
+  min-height: 475px;
   margin: 75px auto 15px;
   padding: 20px 20px 0 20px;
   background-color: #f1c7f8;
