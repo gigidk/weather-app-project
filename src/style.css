@@ -137,13 +137,9 @@ a#farenheit:visited {
   text-decoration: none;
 }
 
-.selected {
-  text-decoration: underline;
-  color: red;
-}
-
 a.selected {
   font-weight: 900;
+  font-size: 1.2em;
 }
 
 #celsius,
